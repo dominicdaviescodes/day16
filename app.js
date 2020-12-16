@@ -9,8 +9,9 @@ const percentage = document.getElementById('percentage');
 // the water will move up or down
 const remained = document.getElementById('remained');
 
-// Fill the small cups
+updateBigCup();
 
+// Fill the small cups
 smallCups.forEach((cup, idx) => {
   // console.log(idx); gives us index of cups
   cup.addEventListener('click', () => highlightCups(idx));
@@ -36,4 +37,34 @@ function highlightCups(idx) {
       cup.classList.remove('full');
     }
   });
+  updateBigCup();
+}
+
+function updateBigCup() {
+  // get no. of full cups
+  const fullCups = document.querySelectorAll('.cup-small.full').length;
+  // will always be 8 total cups
+  const totalCups = smallCups.length;
+
+  // if no full cups, hide %
+  if (fullCups === 0) {
+    percentage.style.visibility = 'hidden';
+    percentage.style.height = 0;
+  } else {
+    percentage.style.visibility = 'visible';
+    // fill the large cup with water (height 330px)
+    percentage.style.height = `${(fullCups / totalCups) * 330}px`;
+    // also show %
+    percentage.innerText = `${(fullCups / totalCups) * 100}%`;
+  }
+
+  // the text for amount of liters remaining needs to disappear at 100%
+  if (fullCups === totalCups) {
+    remained.style.visibility = 'hidden';
+    remained.style.height = 0;
+  } else {
+    // amount remaining in liters
+    remained.style.visibility = 'visible';
+    liters.innerText = `${2 - (250 * fullCups) / 1000}L`;
+  }
 }
